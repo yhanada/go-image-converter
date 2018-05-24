@@ -5,29 +5,27 @@ import (
 	"path/filepath"
 )
 
-type Target struct {
-	Files []string
+// get target file list
+func GetTargetFiles(imageType ImageType, srcDir string) []string {
+	return findFiles(imageType, srcDir)
 }
 
-func GetFiles(srcDir string) *Target {
-	files := dirWalk(srcDir)
-	return &Target{Files: files}
-}
-
-func dirWalk(dir string) [] string {
+func findFiles(imageType ImageType, dir string) []string {
+	var paths []string
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
-		panic(err)
+		return paths
 	}
 
-	var paths []string
 	for _, file := range files {
 		if file.IsDir() {
-			paths = append(paths, dirWalk(filepath.Join(dir, file.Name()))...)
+			paths = append(paths, findFiles(imageType, filepath.Join(dir, file.Name()))...)
 		} else {
-			paths = append(paths, filepath.Join(dir, file.Name()))
+			fileImageType := getFileImageType(file.Name())
+			if imageType == fileImageType {
+				paths = append(paths, filepath.Join(dir, file.Name()))
+			}
 		}
 	}
-
 	return paths
 }

@@ -1,31 +1,40 @@
 package converter
 
 import (
-	"os"
 	"image"
+	"image/gif"
+	"image/jpeg"
 	"image/png"
-	_ "image/jpeg"
-	"path/filepath"
-	"strings"
+	"os"
 )
 
-func ConvertToPng(src string) (err error) {
+// Convert image from src file to image specified with targetType
+func Convert(targetType ImageType, src string) (bool, string, error) {
 	file, err := os.Open(src)
 	if err != nil {
-		return err
+		return false, "", err
 	}
 	defer file.Close()
 
 	img, _, err := image.Decode(file)
 	if err != nil {
-		return nil
+		return false, "", err
 	}
 
-	ext := filepath.Ext(src)
-	destFilename := strings.Replace(src, ext, ".png", 1)
-	dest, err := os.Create(destFilename)
+	destFilepath, err := getDestFilepath(targetType, src)
+	if err != nil {
+		return false, "", err
+	}
+	dest, err := os.Create(destFilepath)
 	defer dest.Close()
 
-	png.Encode(dest, img)
-	return nil
+	switch targetType {
+	case JPEG:
+		jpeg.Encode(dest, img, nil)
+	case PNG:
+		png.Encode(dest, img)
+	case GIF:
+		gif.Encode(dest, img, nil)
+	}
+	return true, destFilepath, nil
 }
