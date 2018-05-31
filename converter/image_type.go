@@ -17,7 +17,8 @@ const (
 
 // get ImageType by string
 func GetImageType(str string) ImageType {
-	switch str {
+	value := strings.ToLower(str)
+	switch value {
 	case "jpg", "jpeg":
 		return JPEG
 	case "png":
@@ -32,16 +33,8 @@ func GetImageType(str string) ImageType {
 // get ImageType by file extention
 func getFileImageType(filename string) ImageType {
 	ext := filepath.Ext(filename)
-	switch ext {
-	case ".jpg", ".jpeg":
-		return JPEG
-	case ".png":
-		return PNG
-	case ".gif":
-		return GIF
-	default:
-		return NONE
-	}
+	str := ext[1:]
+	return GetImageType(str)
 }
 
 // get destination file path
