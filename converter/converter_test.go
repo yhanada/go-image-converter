@@ -32,3 +32,23 @@ func TestGetImageTypeTable(t *testing.T) {
 		}
 	}
 }
+
+func TestGetTargetFiles(t *testing.T) {
+	cases := []struct{
+		dir string
+		imageType ImageType
+		count int
+	}{
+		{dir:"../testdata", imageType: JPEG, count:2},
+		{dir:"../testdata", imageType: PNG, count:0},
+		{dir:"../testdata/foo", imageType: JPEG, count:1},
+		{dir:"../testdata/empty", imageType: JPEG, count:0},
+	}
+
+	for _, c := range cases {
+		files := GetTargetFiles(c.imageType, c.dir)
+		if len(files) != c.count {
+			t.Error("Invalid target files")
+		}
+	}
+}
