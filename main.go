@@ -31,15 +31,11 @@ func main() {
 	}
 
 	for _, file := range files {
-		ok, dest, err := converter.Convert(toType, file)
+		dest, err := converter.Convert(toType, file)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(2)
 		}
-		if ok {
-			fmt.Println("Converted:" + file + " -> " + dest)
-		} else {
-			fmt.Println("Failed to convert:" + file)
-		}
+		fmt.Println("Converted:" + file + " -> " + dest)
 	}
 }
