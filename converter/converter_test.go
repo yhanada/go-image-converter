@@ -10,6 +10,7 @@ func TestGetImageTypeJpeg(t *testing.T) {
 }
 
 func TestGetImageTypeTable(t *testing.T) {
+	t.Helper()
 	cases := []struct {
 		input    string
 		expected ImageType
@@ -34,6 +35,7 @@ func TestGetImageTypeTable(t *testing.T) {
 }
 
 func TestGetTargetFiles(t *testing.T) {
+	t.Helper()
 	cases := []struct{
 		dir string
 		imageType ImageType
